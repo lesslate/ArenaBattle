@@ -10,6 +10,12 @@ UCLASS()
 class ARENABATTLE_API AABCharacter : public ACharacter
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(VisibleInstanceOnly,BlueprintReadOnly,Category=Attack,Meta=(AllowPrivateAccess=true))
+	float AttackRange;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	float AttackRadius;
 
 public:
 	// Sets default values for this character's properties
@@ -39,8 +45,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void PostInitializeComponents() override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	bool CanSetWeapon();
+	void SetWeapon(class AABWeapon* NewWeapon);
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	class AABWeapon* CurrentWeapon;
+	
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	USkeletalMeshComponent* Weapon;
 
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	USpringArmComponent* SpringArm;
@@ -62,7 +78,7 @@ private:
 
 	void AttackStartComboState();
 	void AttackEndComboState();
-
+	void AttackCheck();
 private:
 	UPROPERTY(VisibleINstanceOnly, BlueprintReadOnly, Category = Attack, Meta=(AllowPrivateAccess=true))
 	bool IsAttacking;
