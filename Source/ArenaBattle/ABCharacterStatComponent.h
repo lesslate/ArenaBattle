@@ -21,7 +21,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	virtual void InitializeComponent() override;
+	virtual void InitializeComponent() override; // PostinitializeComponent 바로 전에 호출
 
 public:
 	void SetNewLevel(int32 NewLevel);
@@ -32,6 +32,8 @@ public:
 
 	FOnHPIsZeroDelegate OnHPIsZero;
 	FOnHPChangedDelegate OnHPChanged;
+
+//데이터 관리 변수들
 private:
 	struct FABCharacterData* CurrentStatData = nullptr;
 

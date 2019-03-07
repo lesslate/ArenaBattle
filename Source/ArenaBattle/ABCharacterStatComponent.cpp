@@ -48,10 +48,11 @@ void UABCharacterStatComponent::SetNewLevel(int32 NewLevel)
 	}
 }
 
+//데미지 처리
 void UABCharacterStatComponent::SetDamage(float NewDamage)
 {
 	ABCHECK(nullptr != CurrentStatData);
-	SetHP(FMath::Clamp<float>(CurrentHP - NewDamage, 0.0f, CurrentStatData->MaxHP));
+	SetHP(FMath::Clamp<float>(CurrentHP - NewDamage, 0.0f, CurrentStatData->MaxHP));//clamp :입력값 최소 최대 고정
 }
 
 

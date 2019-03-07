@@ -14,9 +14,9 @@ UABGameInstance::UABGameInstance()
 void UABGameInstance::Init()
 {
 	Super::Init();
-	
 }
 
+//게임 데이터 로딩
 FABCharacterData * UABGameInstance::GetABCharacterData(int32 Level)
 {
 	return ABCharacterTable->FindRow<FABCharacterData>(*FString::FromInt(Level), TEXT(""));

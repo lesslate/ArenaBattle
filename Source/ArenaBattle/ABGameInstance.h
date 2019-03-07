@@ -7,6 +7,8 @@
 #include "Engine/GameInstance.h"
 #include "ABGameInstance.generated.h"
 
+
+//데이터를 불러들이기 위한 구조체 선언
 USTRUCT(BlueprintType)
 struct FABCharacterData : public FTableRowBase
 {

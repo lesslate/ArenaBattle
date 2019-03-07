@@ -15,7 +15,7 @@ AABCharacter::AABCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
-	CharacterStat = CreateDefaultSubobject<UABCharacterStatComponent>(TEXT("CHARATERSTAT"));
+	CharacterStat = CreateDefaultSubobject<UABCharacterStatComponent>(TEXT("CHARATERSTAT")); //ABCharacterStatComponent 부착
 	HPBarWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPBARWIDGET"));
 
 	SpringArm->SetupAttachment(GetCapsuleComponent());
@@ -165,6 +165,7 @@ void AABCharacter::PostInitializeComponents()
 
 	ABAnim->OnAttackHitCheck.AddUObject(this, &AABCharacter::AttackCheck);
 
+	//HP소진->델리게이트 호출->DeadAnim
 	CharacterStat->OnHPIsZero.AddLambda([this]()->void {
 
 		ABLOG(Warning, TEXT("OnHPIsZero"));
