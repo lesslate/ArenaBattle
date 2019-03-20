@@ -8,6 +8,8 @@
 #include "Components/WidgetComponent.h"
 #include "ABCharacterWidget.h"
 #include "ABAIController.h"
+#include "ABCharacterSetting.h"
+#include "ABGameInstance.h"
 
 // Sets default values
 AABCharacter::AABCharacter()
@@ -71,6 +73,14 @@ AABCharacter::AABCharacter()
 	AIControllerClass = AABAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned; //새로운 캐릭터마다 AI가 지배
 	
+	auto DefaultSetting = GetDefault<UABCharacterSetting>();
+	if (DefaultSetting->CharacterAssets.Num() > 0)
+	{
+		for (auto CharacterAsset : DefaultSetting->CharacterAssets)
+		{
+			ABLOG(Warning, TEXT("Character Asset : %s"), *CharacterAsset.ToString());
+		}
+	}
 }
 
 // Called when the game starts or when spawned
@@ -78,6 +88,18 @@ void AABCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!IsPlayerControlled())
+	{
+		auto DefaultSetting = GetDefault<UABCharacterSetting>();
+		int32 RandIndex = FMath::RandRange(0, DefaultSetting->CharacterAssets.Num() - 1);
+		ChracterAssetToLoad = DefaultSetting->CharacterAssets[RandIndex];
+
+		auto ABGameInstance = Cast<UABGameInstance>(GetGameInstance());
+		if (nullptr != ABGameInstance)
+		{
+			AssetStreamingHandle = ABGameInstance->StreamableManager.RequestAsyncLoad(ChracterAssetToLoad, FStreamableDelegate::CreateUObject(this, &AABCharacter::OnAssetLoadCompleted));
+		}
+	}
 	
 }
 
@@ -294,6 +316,16 @@ void AABCharacter::ViewChange()
 	case EControlMode::DIABLO:
 		SetControlMode(EControlMode::GTA);
 		break;
+	}
+}
+
+void AABCharacter::OnAssetLoadCompleted()
+{
+	AssetStreamingHandle->ReleaseHandle();
+	TSoftObjectPtr<USkeletalMesh> LoadedAssetPath(ChracterAssetToLoad);
+	if (LoadedAssetPath.IsValid())
+	{
+		GetMesh()->SetSkeletalMesh(LoadedAssetPath.Get());
 	}
 }
 

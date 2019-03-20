@@ -82,7 +82,7 @@ private:
 
 	void ViewChange();
 	
-
+	void OnAssetLoadCompleted();
 
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage,bool bInterrupted);
@@ -108,6 +108,9 @@ private:
 
 	UPROPERTY()
 	class UABAnimInstance* ABAnim;
+
+	FSoftObjectPath ChracterAssetToLoad = FSoftObjectPath(nullptr);
+	TSharedPtr<struct FStreamableHandle> AssetStreamingHandle;
 
 	
 };
