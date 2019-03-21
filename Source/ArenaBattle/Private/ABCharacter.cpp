@@ -88,6 +88,8 @@ AABCharacter::AABCharacter()
 	SetActorHiddenInGame(true);
 	HPBarWidget->SetHiddenInGame(true);
 	bCanBeDamaged = false;
+
+	DeadTimer = 5.0f;
 }
 
 void AABCharacter::SetCharacterState(ECharacterState NewState)
@@ -99,6 +101,10 @@ void AABCharacter::SetCharacterState(ECharacterState NewState)
 	{
 	case ECharacterState::LOADING:
 	{
+		if (bIsPlayer)
+		{
+			DisableInput(ABPlayerController);
+		}
 		SetActorHiddenInGame(true);
 		HPBarWidget->SetHiddenInGame(true);
 		bCanBeDamaged = false;
@@ -117,6 +123,19 @@ void AABCharacter::SetCharacterState(ECharacterState NewState)
 		auto CharacterWidget = Cast<UABCharacterWidget>(HPBarWidget->GetUserWidgetObject());
 		ABCHECK(nullptr != CharacterWidget);
 		CharacterWidget->BindCharacterStat(CharacterStat);
+
+		if (bIsPlayer)
+		{
+			SetControlMode(EControlMode::DIABLO);
+			GetCharacterMovement()->MaxWalkSpeed = 600.0f;
+			EnableInput(ABPlayerController);
+		}
+		else
+		{
+		SetControlMode(EControlMode::NPC);
+		GetCharacterMovement()->MaxWalkSpeed = 400.f;
+		ABAIController->RunAI();
+		}
 		break;
 	}
 	case ECharacterState::DEAD:
@@ -127,7 +146,26 @@ void AABCharacter::SetCharacterState(ECharacterState NewState)
 		ABAnim->SetDeadAnim();
 		bCanBeDamaged = false;
 		
+		if (bIsPlayer)
+		{
+			DisableInput(ABPlayerController);
+		}
+		else
+		{
+			ABAIController->StopAI();
+		}
+		GetWorld()->GetTimerManager().SetTimer(DeadTimerHandle, FTimerDelegate::CreateLambda([this]()->void{
+			if (bIsPlayer)
+			{
+				ABPlayerController->RestartLevel();
+			}
+			else
+			{
+				Destroy();
+			}
+			}), DeadTimer, false);
 		break;
+
 	}
 	}
 }
@@ -294,21 +332,7 @@ void AABCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AABCharacter::Turn);
 }
 
-void AABCharacter::PossessedBy(AController * NewController)
-{
-	Super::PossessedBy(NewController);
 
-	if (IsPlayerControlled())
-	{
-		SetControlMode(EControlMode::DIABLO);
-		GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-	}
-	else
-	{
-		SetControlMode(EControlMode::NPC);
-		GetCharacterMovement()->MaxWalkSpeed = 300.f;
-	}
-}
 
 bool AABCharacter::CanSetWeapon()
 {
