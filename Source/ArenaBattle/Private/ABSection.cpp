@@ -3,11 +3,13 @@
 #include "ABSection.h"
 #include "ABCharacter.h"
 #include "ABItemBox.h"
+#include "ABPlayerController.h"
+#include "ABGameMode.h"
 
 // Sets default values
 AABSection::AABSection()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
@@ -76,7 +78,7 @@ void AABSection::OnConstruction(const FTransform & Transform)
 void AABSection::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	SetState(bNoBattle ? ESectionState::COMPLETE : ESectionState::READY);
 }
 
@@ -180,6 +182,24 @@ void AABSection::OnGateTriggerBeginOverlap(UPrimitiveComponent * OverlappedCompo
 
 void AABSection::OnNPCSpawn()
 {
-	ABLOG(Warning, TEXT("Spawn NPC"));
-	GetWorld()->SpawnActor<AABCharacter>(GetActorLocation() + FVector::UpVector * 88.0f, FRotator::ZeroRotator);
+	auto KeyNPC = GetWorld()->SpawnActor<AABCharacter>(GetActorLocation() + FVector::UpVector * 88.0f, FRotator::ZeroRotator);
+	if (nullptr != KeyNPC)
+	{
+		KeyNPC->OnDestroyed.AddDynamic(this, &AABSection::OnKeyNPCDestroyed);
+	}
+}
+
+void AABSection::OnKeyNPCDestroyed(AActor * DestroyedActor)
+{
+	auto ABCharacter = Cast<AABCharacter>(DestroyedActor);
+	ABCHECK(nullptr != ABCharacter);
+
+	auto ABPlayerController = Cast<AABPlayerController>(ABCharacter->LastHitBy);
+	ABCHECK(nullptr != ABPlayerController);
+
+	auto ABGameMode = Cast<AABGameMode>(GetWorld()->GetAuthGameMode());
+	ABCHECK(nullptr != ABGameMode);
+	ABGameMode->AddScore(ABPlayerController);
+
+	SetState(ESectionState::COMPLETE);
 }

@@ -24,11 +24,11 @@ public:
 
 	void RunAI();
 	void StopAI();
+
 private:
 	UPROPERTY()
 	class UBehaviorTree* BTAsset;
 
 	UPROPERTY()
 	class UBlackboardData* BBAsset;
-	
 };

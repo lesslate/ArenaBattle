@@ -8,20 +8,18 @@
 #include "Engine/StreamableManager.h"
 #include "ABGameInstance.generated.h"
 
-
-//데이터를 불러들이기 위한 구조체 선언
 USTRUCT(BlueprintType)
 struct FABCharacterData : public FTableRowBase
 {
 	GENERATED_BODY()
-	
+
 public:
-	FABCharacterData() : Level(1), MaxHP(100.0f),Attack(10.0f),DropExp(10),NextExp(30){}
+	FABCharacterData() : Level(1), MaxHP(100.0f), Attack(10.0f), DropExp(10), NextExp(30) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32 Level;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	float MaxHP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
@@ -41,7 +39,7 @@ UCLASS()
 class ARENABATTLE_API UABGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-	
+
 public:
 	UABGameInstance();
 
@@ -53,6 +51,4 @@ public:
 private:
 	UPROPERTY()
 	class UDataTable* ABCharacterTable;
-	
-	
 };

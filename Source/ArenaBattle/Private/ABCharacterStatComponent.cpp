@@ -3,26 +3,22 @@
 #include "ABCharacterStatComponent.h"
 #include "ABGameInstance.h"
 
+
 // Sets default values for this component's properties
 UABCharacterStatComponent::UABCharacterStatComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-	//컴포넌트 초기화
 	bWantsInitializeComponent = true;
-	
+
 	Level = 1;
 }
-
 
 // Called when the game starts
 void UABCharacterStatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 void UABCharacterStatComponent::InitializeComponent()
@@ -48,26 +44,22 @@ void UABCharacterStatComponent::SetNewLevel(int32 NewLevel)
 	}
 }
 
-//데미지 처리
 void UABCharacterStatComponent::SetDamage(float NewDamage)
 {
 	ABCHECK(nullptr != CurrentStatData);
-	SetHP(FMath::Clamp<float>(CurrentHP - NewDamage, 0.0f, CurrentStatData->MaxHP));//clamp :입력값 최소 최대 고정
+	SetHP(FMath::Clamp<float>(CurrentHP - NewDamage, 0.0f, CurrentStatData->MaxHP));
 }
-
-
 
 void UABCharacterStatComponent::SetHP(float NewHP)
 {
 	CurrentHP = NewHP;
 	OnHPChanged.Broadcast();
-	if (CurrentHP <=KINDA_SMALL_NUMBER)
+	if (CurrentHP < KINDA_SMALL_NUMBER)
 	{
 		CurrentHP = 0.0f;
 		OnHPIsZero.Broadcast();
 	}
 }
-
 
 float UABCharacterStatComponent::GetAttack()
 {
@@ -79,7 +71,10 @@ float UABCharacterStatComponent::GetHPRatio()
 {
 	ABCHECK(nullptr != CurrentStatData, 0.0f);
 
-	return(CurrentStatData->MaxHP < KINDA_SMALL_NUMBER) ? 0.0f : (CurrentHP / CurrentStatData->MaxHP);
+	return (CurrentStatData->MaxHP < KINDA_SMALL_NUMBER) ? 0.0f : (CurrentHP / CurrentStatData->MaxHP);
 }
 
-
+int32 UABCharacterStatComponent::GetDropExp() const
+{
+	return CurrentStatData->DropExp;
+}

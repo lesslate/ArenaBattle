@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerState.h"
 #include "ABPlayerState.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnPlayerStateChangedDelegate);
+
 /**
  * 
  */
@@ -19,8 +21,13 @@ public:
 
 	int32 GetGameScore() const;
 	int32 GetCharacterLevel() const;
+	float GetExpRatio() const;
+	bool AddExp(int32 IncomeExp);
+	void AddGameScore();
 
 	void InitPlayerData();
+
+	FOnPlayerStateChangedDelegate OnPlayerStateChanged;
 
 protected:
 	UPROPERTY(Transient)
@@ -28,6 +35,11 @@ protected:
 
 	UPROPERTY(Transient)
 	int32 CharacterLevel;
-	
-	
+
+	UPROPERTY(Transient)
+	int32 Exp;
+
+private:
+	void SetCharacterLevel(int32 NewCharacterLevel);
+	struct FABCharacterData* CurrentStatData;
 };

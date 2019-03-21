@@ -27,6 +27,7 @@ AABPawn::AABPawn()
 	SpringArm->SetRelativeRotation(FRotator(-15.0f, 0.0f, 0.0f));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_CARDBOARD(TEXT("/Game/InfinityBladeWarriors/Character/CompleteCharacters/SK_CharM_Cardboard.SK_CharM_Cardboard"));
+
 	if (SK_CARDBOARD.Succeeded())
 	{
 		Mesh->SetSkeletalMesh(SK_CARDBOARD.Object);
@@ -35,6 +36,7 @@ AABPawn::AABPawn()
 	Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(TEXT("/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C"));
+
 	if (WARRIOR_ANIM.Succeeded())
 	{
 		Mesh->SetAnimInstanceClass(WARRIOR_ANIM.Class);
@@ -55,6 +57,18 @@ void AABPawn::Tick(float DeltaTime)
 
 }
 
+void AABPawn::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	ABLOG_S(Warning);
+}
+
+void AABPawn::PossessedBy(AController* NewController)
+{
+	ABLOG_S(Warning);
+	Super::PossessedBy(NewController);
+}
+
 // Called to bind functionality to input
 void AABPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -72,19 +86,4 @@ void AABPawn::UpDown(float NewAxisValue)
 void AABPawn::LeftRight(float NewAxisValue)
 {
 	AddMovementInput(GetActorRightVector(), NewAxisValue);
-
 }
-
-void AABPawn::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	ABLOG_S(Warning);
-}
-
-void AABPawn::PossessedBy(AController * NewController)
-{
-	ABLOG_S(Warning);
-	Super::PossessedBy(NewController);
-}
-
-

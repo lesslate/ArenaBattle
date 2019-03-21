@@ -4,7 +4,8 @@
 
 UABGameInstance::UABGameInstance()
 {
-	FString CharacterDataPath = TEXT("DataTable'/Game/Book/GameData/ABCharacterData.ABCharacterData'");
+	FString CharacterDataPath = TEXT("/Game/Book/GameData/ABCharacterData.ABCharacterData");
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABCHARACTER(*CharacterDataPath);
 	ABCHECK(DT_ABCHARACTER.Succeeded());
 	ABCharacterTable = DT_ABCHARACTER.Object;
@@ -16,9 +17,7 @@ void UABGameInstance::Init()
 	Super::Init();
 }
 
-//게임 데이터 로딩
-FABCharacterData * UABGameInstance::GetABCharacterData(int32 Level)
+FABCharacterData* UABGameInstance::GetABCharacterData(int32 Level)
 {
 	return ABCharacterTable->FindRow<FABCharacterData>(*FString::FromInt(Level), TEXT(""));
 }
-

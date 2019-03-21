@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ArenaBattle.h"
+#include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "ABCharacterStatComponent.generated.h"
 
@@ -21,7 +21,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	virtual void InitializeComponent() override; // PostinitializeComponent 바로 전에 호출
+	virtual void InitializeComponent() override;
 
 public:
 	void SetNewLevel(int32 NewLevel);
@@ -29,19 +29,18 @@ public:
 	void SetHP(float NewHP);
 	float GetAttack();
 	float GetHPRatio();
+	int32 GetDropExp() const;
 
 	FOnHPIsZeroDelegate OnHPIsZero;
 	FOnHPChangedDelegate OnHPChanged;
 
-//데이터 관리 변수들
 private:
 	struct FABCharacterData* CurrentStatData = nullptr;
 
 	UPROPERTY(EditInstanceOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
-	int32 Level;
+	int Level;
 
-	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat, Meta = (AllowPrivateAccess = true))
+	UPROPERTY(Transient, VisibleInstanceOnly, Category = Stat, Meta = (AllowPirvateAccess = true))
 	float CurrentHP;
 
-	
 };

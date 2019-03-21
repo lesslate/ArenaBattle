@@ -10,30 +10,28 @@ UBTTask_Attack::UBTTask_Attack()
 	IsAttacking = false;
 }
 
-EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
+EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	EBTNodeResult::Type Result = Super::ExecuteTask(OwnerComp, NodeMemory);
-	
+
 	auto ABCharacter = Cast<AABCharacter>(OwnerComp.GetAIOwner()->GetPawn());
 	if (nullptr == ABCharacter)
 		return EBTNodeResult::Failed;
 
 	ABCharacter->Attack();
 	IsAttacking = true;
-	ABCharacter->OnAttackEnd.AddLambda([this]()->void {
+	ABCharacter->OnAttackEnd.AddLambda([this]() -> void {
 		IsAttacking = false;
 	});
 
 	return EBTNodeResult::InProgress;
 }
 
-void UBTTask_Attack::TickTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory, float DeltaSeconds)
+void UBTTask_Attack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 	if (!IsAttacking)
 	{
-	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
 }
-
-
