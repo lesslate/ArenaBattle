@@ -220,7 +220,7 @@ int32 AABCharacter::GetExp() const
 
 float AABCharacter::GetFinalAttackRange() const
 {
-	return (nullptr!=CurrentWeapon) ? CurrentWeapon->GetAttackRange():AttackRadius;
+	return (nullptr != CurrentWeapon) ? CurrentWeapon->GetAttackRange() : AttackRange;
 }
 
 void AABCharacter::SetControlMode(EControlMode NewControlMode)
