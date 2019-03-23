@@ -21,7 +21,7 @@ public:
 
 	int32 GetExp() const;
 	float GetFinalAttackRange() const;
-
+	float GetFinalAttackDamage() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
