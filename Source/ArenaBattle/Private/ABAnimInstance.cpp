@@ -7,7 +7,7 @@ UABAnimInstance::UABAnimInstance()
 	CurrentPawnSpeed = 0.0f;
 	IsInAir = false;
 	IsDead = false;
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("/Game/Book/Animations/SK_Mannequin_Skeleton_Montage.SK_Mannequin_Skeleton_Montage"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("AnimMontage'/Game/Book/Animations/SK_Mannequin_Skeleton_Montage2.SK_Mannequin_Skeleton_Montage'"));
 
 	if (ATTACK_MONTAGE.Succeeded())
 	{

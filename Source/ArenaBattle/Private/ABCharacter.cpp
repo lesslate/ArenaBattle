@@ -106,7 +106,9 @@ void AABCharacter::BeginPlay()
 
 	if (bIsPlayer)
 	{
-		AssetIndex = 4;
+		auto ABPlayerState = Cast<AABPlayerState>(PlayerState);
+		ABCHECK(nullptr != ABPlayerState);
+		AssetIndex = ABPlayerState->GetCharacterIndex();
 	}
 	else
 	{
