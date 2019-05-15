@@ -18,6 +18,7 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	if (nullptr == ABCharacter)
 		return EBTNodeResult::Failed;
 
+
 	ABCharacter->Attack();
 	IsAttacking = true;
 	ABCharacter->OnAttackEnd.AddLambda([this]() -> void {

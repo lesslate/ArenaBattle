@@ -23,5 +23,6 @@ bool UBTDecorator_IsInAttackRange::CalculateRawConditionValue(UBehaviorTreeCompo
 		return false;
 
 	bResult = (Target->GetDistanceTo(ControllingPawn) <= ControllingPawn->GetFinalAttackRange()); // 
+	UE_LOG(LogTemp, Log, TEXT("can Attack: %s"), bResult ? TEXT("true") : TEXT("false"));
 	return bResult;
 }
